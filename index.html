@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Task List 2023</title>
+    <script src="https://kit.fontawesome.com/cca9354e89.js" crossorigin="anonymous"></script>
+    <style>
+        body{
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: sans-serif;
+            color: #333;
+            background-color: white;
+        }
+        
+        .container{
+            max-width: 800px;
+            width: 100%;
+            margin: 50px auto;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            background-color: whitesmoke;
+        }
+
+        header{
+            max-width: 95%;
+            width: 100%;
+            margin: 0 auto;
+            /* padding: 10px; */
+        }
+
+        input{
+            padding: 10px 5px;
+            /* font-size: 1.1rem; */
+        }
+
+        #new-task-form{
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        #new-task-input{
+            flex: 1;
+            appearance: none;
+            /* padding: 5px; */
+            background: white;
+            outline: none;
+            border: 2px;
+            border: none;
+            border-radius: 7px;
+        }
+        #new-task-input:focus{
+            border: 2px solid lightseagreen;
+            border-color: lightseagreen;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        }
+        #new-task-submit{
+            border: none;
+            background-color: rgb(0, 157, 255);
+            /* background: none; */
+            border-radius: 7px;
+            color: white;
+            cursor: pointer;
+            transition: .3s;
+            padding: 5px;
+        }
+        #new-task-submit:hover{
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+            /* transform: translateY(-3px); */
+        }
+
+        main{
+            max-width: 95%;
+            width: 100%;
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+        #tasks .task{
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            border-radius: 7px;
+            padding: 5px;
+            margin: 10px;
+            align-items: center;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            animation: fadein .5s ease;
+            flex-wrap: wrap;
+        }
+        @keyframes fadein{
+            from{
+                opacity: 0;
+                transform: translateY(-5px);
+            } to {
+                opacity: 1;
+
+            }
+        }
+        .content input{
+            border: none;
+            background: none;
+            outline: none;
+        }
+        .actions button{
+            border: none;
+            background: none;
+            color: firebrick;
+            cursor: pointer;
+        }
+
+        h2{
+            opacity: .9;
+        }
+
+        @media screen and (min-width: 500px) {
+            input{
+                padding: 10px 10px;
+            }
+        }
+   
+
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>Task List</h1>
+            <form id="new-task-form">
+                <input
+                    type="text"
+                    id="new-task-input"
+                    placeholder="Add here...">
+                <input 
+                    type="submit"
+                    id="new-task-submit"
+                    value="Add task">
+            </form>
+        </header>
+    
+        <main>
+            <section class="task-list">
+                <h2>Your tasks</h2>
+                <div id="tasks">
+                    <!-- <div class="task">
+                        <div class="content">
+                            <input
+                                 type="text"
+                                 class="text"
+                                 readonly>
+                                 
+                        </div>
+                        <div class="actions">
+                            <button class="edit">Edit</button>
+                            <button class="delete">Delete</button>
+                        </div>
+                    </div> -->
+                </div>
+            </section>
+        </main>
+    </div>
+  
+  
+ 
+    <script>
+
+        window.addEventListener('load', () => {
+            const form = document.querySelector("#new-task-form")
+            const input = document.querySelector("#new-task-input")
+            const list_el = document.querySelector("#tasks")
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const task = input.value;
+
+                if(!task) {
+                    alert("please fill out task");
+                    return;
+                }
+
+                const task_el = document.createElement("div");
+                task_el.classList.add("task")
+
+                const task_content_el = document.createElement("div");
+                task_content_el.classList.add("content");
+
+                task_el.appendChild(task_content_el);
+
+                const task_input_el = document.createElement("input");
+                task_input_el.classList.add("text");
+                task_input_el.type = "text";
+                task_input_el.value = task;
+                task_input_el.setAttribute("readonly", "readonly");
+
+                task_content_el.appendChild(task_input_el);
+
+                const task_actions_el = document.createElement("div");
+                task_actions_el.classList.add("actions");
+                
+                const task_edit_el = document.createElement("button");
+                task_actions_el.classList.add("edit");
+                task_edit_el.innerHTML = "Edit";
+                
+                const task_delete_el = document.createElement("button");
+                task_actions_el.classList.add("delete");
+                task_delete_el.innerHTML = "Delete";
+
+                task_actions_el.appendChild(task_edit_el);
+                task_actions_el.appendChild(task_delete_el);
+
+                task_el.appendChild(task_actions_el);
+
+                list_el.appendChild(task_el)
+
+                input.value = "";
+
+                task_edit_el.addEventListener('click', () => {
+                    if(task_edit_el.innerText.toLocaleLowerCase() == "edit") {
+                        task_input_el.removeAttribute("readonly")
+                        task_input_el.focus();
+                        task_edit_el.innerText = "Save";
+                    } else {
+                        task_input_el.setAttribute("readonly", "readonly");
+                        task_edit_el.innerText = "Edit";
+                    } 
+                })
+
+                task_delete_el.addEventListener('click', () => {
+                    list_el.removeChild(task_el);
+                })
+
+            })
+        })
+
+    </script>
+</body>
+</html>
